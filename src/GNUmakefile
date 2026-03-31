@@ -69,6 +69,17 @@ else
   else
     UNAME_S := $(shell uname -s)
   endif
+  ifeq ($(UNAME_S),OpenBSD)
+    ifeq (i386,$(findstring i386,$(shell $(CXX) -dumpmachine)))
+      OSNAME=-i386-openbsd
+    else
+      ifeq (amd64,$(findstring amd64,$(shell $(CXX) -dumpmachine)))
+        OSNAME=-amd64-openbsd
+      else
+        OSNAME=-arm64-openbsd
+      endif
+    endif
+  endif
   ifeq ($(UNAME_S),Linux)
     ifeq (i686,$(findstring i686,$(shell $(CXX) -dumpmachine)))
       OSNAME=-i686-linux
@@ -871,6 +882,9 @@ ifeq ($(OS),Windows_NT)
   endif
 	pushd ..\\build && powershell -ExecutionPolicy ByPass -F ..\\scripts\zipadmb.ps1 && popd
 else
+  ifeq ($(UNAME_S),OpenBSD)
+	cp ../docs/install/QuickStartUnix.md ../build/$(ADMB_VER)/INSTALL.txt
+  endif
   ifeq ($(UNAME_S),Linux)
 	cp ../docs/install/QuickStartUnix.md ../build/$(ADMB_VER)/INSTALL.txt
   endif

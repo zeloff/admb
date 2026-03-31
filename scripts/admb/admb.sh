@@ -134,6 +134,20 @@ if [ "$OS" == "Windows_NT" ]; then
 else
   UNAME_S="`uname -s`"
 fi
+if [ "$UNAME_S" == "OpenBSD" ]; then
+  if [ "$CXX" == "" ]; then
+    CXX=g++
+  fi
+  if [[ "`$CXX -dumpmachine`" =~ "i386" ]]; then
+    OS_NAME=-i386-openbsd
+  else
+    if [[ "`$CXX -dumpmachine`" =~ "amd64" ]]; then
+      OS_NAME=-amd64-openbsd
+    else
+      OS_NAME=-arm64-openbsd
+    fi
+  fi
+fi
 if [ "$UNAME_S" == "Linux" ]; then
   if [ "$CXX" == "" ]; then
     CXX=g++
